@@ -32,7 +32,10 @@ logger = logging.getLogger(__name__)
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
+    update.message.reply_text('bye!')
+
+player1=''
+player2=''
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -45,15 +48,69 @@ def send_100_times(update: Update, message):
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    x = threading.Thread(target=send_100_times, args=(update, update.message.text))
-    x.start()
-         
+    update.message.reply_text('Help!')
+
+def scissors(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /scissors is issued."""
+    global player1
+    global player2
+    
+    if player1 =='':
+        player1 ='scissors'
+    else:
+        player2= 'scissors'
+
+    evaluate(update)
+
+def evaluate (update):
+    global player1 
+    global player2 
+
+    if player1 !=''and player2 !='':
+        if player1==player2:
+            update.message.reply_text('draw!')
+        elif player1== 'scissors' and player2=='paper':
+            update.message.reply_text('player1 win!')
+        elif player1 == 'paper'and player2 =='scissors':
+            update.message.reply_text('player2 win!')
+
+        player1=''
+        player2=''
+
+
+
+
+
+
+
+
+
+
+def  paper(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /paper is issued."""
+    global player1
+    global player2
+    
+    if player1 =='':
+        player1 ='paper'
+    else:
+        player2= 'paper'
+    evaluate(update)
+
+    
+
+  
+
+
+
+
+
 
 
 def main():
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater("1646131932:AAHLYwh0qaE0T3Rk_hakznz75SCPs5Ds02s")
+    updater = Updater("1648018686:AAFgaHrvMWktERAtYOaFMwfjX80oA2YGlW8")
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -63,8 +120,9 @@ def main():
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on noncommand i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-
+    
+    dispatcher.add_handler(CommandHandler("scissors", scissors))
+    dispatcher.add_handler(CommandHandler("paper", paper))
     # Start the Bot
     updater.start_polling()
 
